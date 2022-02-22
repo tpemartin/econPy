@@ -41,9 +41,12 @@ write_Rprofile <- function(appendlines,
     exprs_all |>
       duplicated() -> pickDup
     exprs_all[!pickDup] |>
+      unlist() -> .x
+    .x |>
+      purrr::map(
+        rlang::expr_deparse) |>
       unlist() |>
-      purrr::map_chr(
-        rlang::expr_deparse) -> .new_lines
+      paste(collapse = "\n") -> .new_lines
   }
 
   xfun::write_utf8(.new_lines, rprofilepath)
